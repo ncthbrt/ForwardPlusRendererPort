@@ -7,50 +7,59 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC0A23ED2ABD7ECA00CA6587 /* FPMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0A23EC2ABD7ECA00CA6587 /* FPMesh.swift */; };
+		BCACD8E92AC58BE00079BF71 /* Meshes in Resources */ = {isa = PBXBuildFile; fileRef = BCACD8E82AC58BE00079BF71 /* Meshes */; };
+		BCACD8F12AC5C8EE0079BF71 /* MetalPerformanceShadersGraph.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8EC2AC5C8EE0079BF71 /* MetalPerformanceShadersGraph.framework */; };
+		BCACD8F22AC5C8EE0079BF71 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8ED2AC5C8EE0079BF71 /* MetalKit.framework */; };
+		BCACD8F32AC5C8EE0079BF71 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8EE2AC5C8EE0079BF71 /* Metal.framework */; };
+		BCACD8F42AC5C8EE0079BF71 /* MetalFX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8EF2AC5C8EE0079BF71 /* MetalFX.framework */; };
+		BCACD8F52AC5C8EE0079BF71 /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8F02AC5C8EE0079BF71 /* MetalPerformanceShaders.framework */; };
+		BCACD8F72AC5C8FC0079BF71 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8F62AC5C8FC0079BF71 /* ModelIO.framework */; };
 		BCB980402ABB3DA800CC5B08 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB9803F2ABB3DA800CC5B08 /* AppDelegate.swift */; };
-		BCB980432ABB3DA800CC5B08 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB980422ABB3DA800CC5B08 /* Renderer.swift */; };
+		BCB980432ABB3DA800CC5B08 /* FPRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB980422ABB3DA800CC5B08 /* FPRenderer.swift */; };
 		BCB980452ABB3DA800CC5B08 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB980442ABB3DA800CC5B08 /* GameViewController.swift */; };
-		BCB980472ABB3DA800CC5B08 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = BCB980462ABB3DA800CC5B08 /* Shaders.metal */; };
 		BCB9804A2ABB3DA800CC5B08 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BCB980482ABB3DA800CC5B08 /* Main.storyboard */; };
 		BCB9804C2ABB3DAA00CC5B08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCB9804B2ABB3DAA00CC5B08 /* Assets.xcassets */; };
 		BCB9804F2ABB3DAA00CC5B08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BCB9804D2ABB3DAA00CC5B08 /* LaunchScreen.storyboard */; };
-		BCB980592ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB980582ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests.swift */; };
-		BCB980632ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB980622ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests.swift */; };
-		BCB980652ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB980642ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITestsLaunchTests.swift */; };
+		BCB980722ABC24A500CC5B08 /* FPDepthPass.metal in Sources */ = {isa = PBXBuildFile; fileRef = BCB980712ABC24A500CC5B08 /* FPDepthPass.metal */; };
+		BCB980782ABC273800CC5B08 /* FPCulling.metal in Sources */ = {isa = PBXBuildFile; fileRef = BCB980772ABC273800CC5B08 /* FPCulling.metal */; };
+		BCB9807A2ABC282800CC5B08 /* FPForward.metal in Sources */ = {isa = PBXBuildFile; fileRef = BCB980792ABC282800CC5B08 /* FPForward.metal */; };
+		BCB9807C2ABC3C8300CC5B08 /* MathUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB9807B2ABC3C8300CC5B08 /* MathUtilities.swift */; };
+		BCD01CB32AC2A52500A098C2 /* FPFairy.metal in Sources */ = {isa = PBXBuildFile; fileRef = BCD01CB22AC2A52500A098C2 /* FPFairy.metal */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		BCB980552ABB3DAA00CC5B08 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BCB980342ABB3DA800CC5B08 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BCB9803B2ABB3DA800CC5B08;
-			remoteInfo = ForwardPlusRendererPort;
-		};
-		BCB9805F2ABB3DAA00CC5B08 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BCB980342ABB3DA800CC5B08 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BCB9803B2ABB3DA800CC5B08;
-			remoteInfo = ForwardPlusRendererPort;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
+		BC0A23EC2ABD7ECA00CA6587 /* FPMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPMesh.swift; sourceTree = "<group>"; };
+		BC3FBB322AC5CB370096ED06 /* FPRendererApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPRendererApp.swift; sourceTree = "<group>"; };
+		BC3FBB342AC5CB370096ED06 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		BC3FBB362AC5CB370096ED06 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		BC3FBB382AC5CB390096ED06 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BC3FBB3B2AC5CB390096ED06 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		BCACD8E82AC58BE00079BF71 /* Meshes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Meshes; sourceTree = "<group>"; };
+		BCACD8EA2AC5C0630079BF71 /* ForwardPlusRendererPort.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ForwardPlusRendererPort.entitlements; sourceTree = "<group>"; };
+		BCACD8EC2AC5C8EE0079BF71 /* MetalPerformanceShadersGraph.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShadersGraph.framework; path = System/Library/Frameworks/MetalPerformanceShadersGraph.framework; sourceTree = SDKROOT; };
+		BCACD8ED2AC5C8EE0079BF71 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		BCACD8EE2AC5C8EE0079BF71 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		BCACD8EF2AC5C8EE0079BF71 /* MetalFX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalFX.framework; path = System/Library/Frameworks/MetalFX.framework; sourceTree = SDKROOT; };
+		BCACD8F02AC5C8EE0079BF71 /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = SDKROOT; };
+		BCACD8F62AC5C8FC0079BF71 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
 		BCB9803C2ABB3DA800CC5B08 /* ForwardPlusRendererPort.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForwardPlusRendererPort.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB9803F2ABB3DA800CC5B08 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		BCB980412ABB3DA800CC5B08 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
-		BCB980422ABB3DA800CC5B08 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		BCB980422ABB3DA800CC5B08 /* FPRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPRenderer.swift; sourceTree = "<group>"; };
 		BCB980442ABB3DA800CC5B08 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
-		BCB980462ABB3DA800CC5B08 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		BCB980492ABB3DA800CC5B08 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BCB9804B2ABB3DAA00CC5B08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BCB9804E2ABB3DAA00CC5B08 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		BCB980542ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForwardPlusRendererPortTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB980582ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardPlusRendererPortTests.swift; sourceTree = "<group>"; };
-		BCB9805E2ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForwardPlusRendererPortUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB980622ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardPlusRendererPortUITests.swift; sourceTree = "<group>"; };
 		BCB980642ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardPlusRendererPortUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		BCB980712ABC24A500CC5B08 /* FPDepthPass.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = FPDepthPass.metal; sourceTree = "<group>"; };
+		BCB980752ABC253C00CC5B08 /* FPShaderCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FPShaderCommon.h; sourceTree = "<group>"; };
+		BCB980762ABC259400CC5B08 /* FPShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FPShaderTypes.h; sourceTree = "<group>"; };
+		BCB980772ABC273800CC5B08 /* FPCulling.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = FPCulling.metal; sourceTree = "<group>"; };
+		BCB980792ABC282800CC5B08 /* FPForward.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = FPForward.metal; sourceTree = "<group>"; };
+		BCB9807B2ABC3C8300CC5B08 /* MathUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathUtilities.swift; sourceTree = "<group>"; };
+		BCD01CB22AC2A52500A098C2 /* FPFairy.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = FPFairy.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,33 +67,60 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BCB980512ABB3DAA00CC5B08 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BCB9805B2ABB3DAA00CC5B08 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				BCACD8F72AC5C8FC0079BF71 /* ModelIO.framework in Frameworks */,
+				BCACD8F52AC5C8EE0079BF71 /* MetalPerformanceShaders.framework in Frameworks */,
+				BCACD8F12AC5C8EE0079BF71 /* MetalPerformanceShadersGraph.framework in Frameworks */,
+				BCACD8F32AC5C8EE0079BF71 /* Metal.framework in Frameworks */,
+				BCACD8F42AC5C8EE0079BF71 /* MetalFX.framework in Frameworks */,
+				BCACD8F22AC5C8EE0079BF71 /* MetalKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC3FBB312AC5CB370096ED06 /* FPRenderer */ = {
+			isa = PBXGroup;
+			children = (
+				BC3FBB322AC5CB370096ED06 /* FPRendererApp.swift */,
+				BC3FBB342AC5CB370096ED06 /* ContentView.swift */,
+				BC3FBB362AC5CB370096ED06 /* Item.swift */,
+				BC3FBB382AC5CB390096ED06 /* Assets.xcassets */,
+				BC3FBB3A2AC5CB390096ED06 /* Preview Content */,
+			);
+			path = FPRenderer;
+			sourceTree = "<group>";
+		};
+		BC3FBB3A2AC5CB390096ED06 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				BC3FBB3B2AC5CB390096ED06 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		BCACD8EB2AC5C8EE0079BF71 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BCACD8F62AC5C8FC0079BF71 /* ModelIO.framework */,
+				BCACD8EE2AC5C8EE0079BF71 /* Metal.framework */,
+				BCACD8EF2AC5C8EE0079BF71 /* MetalFX.framework */,
+				BCACD8ED2AC5C8EE0079BF71 /* MetalKit.framework */,
+				BCACD8F02AC5C8EE0079BF71 /* MetalPerformanceShaders.framework */,
+				BCACD8EC2AC5C8EE0079BF71 /* MetalPerformanceShadersGraph.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		BCB980332ABB3DA800CC5B08 = {
 			isa = PBXGroup;
 			children = (
 				BCB9803E2ABB3DA800CC5B08 /* ForwardPlusRendererPort */,
 				BCB980572ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests */,
 				BCB980612ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests */,
+				BC3FBB312AC5CB370096ED06 /* FPRenderer */,
 				BCB9803D2ABB3DA800CC5B08 /* Products */,
+				BCACD8EB2AC5C8EE0079BF71 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,8 +128,6 @@
 			isa = PBXGroup;
 			children = (
 				BCB9803C2ABB3DA800CC5B08 /* ForwardPlusRendererPort.app */,
-				BCB980542ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests.xctest */,
-				BCB9805E2ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,14 +135,22 @@
 		BCB9803E2ABB3DA800CC5B08 /* ForwardPlusRendererPort */ = {
 			isa = PBXGroup;
 			children = (
+				BCACD8EA2AC5C0630079BF71 /* ForwardPlusRendererPort.entitlements */,
+				BCACD8E82AC58BE00079BF71 /* Meshes */,
+				BCD01CB22AC2A52500A098C2 /* FPFairy.metal */,
 				BCB9803F2ABB3DA800CC5B08 /* AppDelegate.swift */,
-				BCB980412ABB3DA800CC5B08 /* ShaderTypes.h */,
-				BCB980422ABB3DA800CC5B08 /* Renderer.swift */,
+				BCB980752ABC253C00CC5B08 /* FPShaderCommon.h */,
+				BCB980422ABB3DA800CC5B08 /* FPRenderer.swift */,
 				BCB980442ABB3DA800CC5B08 /* GameViewController.swift */,
-				BCB980462ABB3DA800CC5B08 /* Shaders.metal */,
 				BCB980482ABB3DA800CC5B08 /* Main.storyboard */,
 				BCB9804B2ABB3DAA00CC5B08 /* Assets.xcassets */,
 				BCB9804D2ABB3DAA00CC5B08 /* LaunchScreen.storyboard */,
+				BCB980712ABC24A500CC5B08 /* FPDepthPass.metal */,
+				BCB980762ABC259400CC5B08 /* FPShaderTypes.h */,
+				BCB980772ABC273800CC5B08 /* FPCulling.metal */,
+				BCB980792ABC282800CC5B08 /* FPForward.metal */,
+				BCB9807B2ABC3C8300CC5B08 /* MathUtilities.swift */,
+				BC0A23EC2ABD7ECA00CA6587 /* FPMesh.swift */,
 			);
 			path = ForwardPlusRendererPort;
 			sourceTree = "<group>";
@@ -150,42 +192,6 @@
 			productReference = BCB9803C2ABB3DA800CC5B08 /* ForwardPlusRendererPort.app */;
 			productType = "com.apple.product-type.application";
 		};
-		BCB980532ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = BCB9806B2ABB3DAA00CC5B08 /* Build configuration list for PBXNativeTarget "ForwardPlusRendererPortTests" */;
-			buildPhases = (
-				BCB980502ABB3DAA00CC5B08 /* Sources */,
-				BCB980512ABB3DAA00CC5B08 /* Frameworks */,
-				BCB980522ABB3DAA00CC5B08 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				BCB980562ABB3DAA00CC5B08 /* PBXTargetDependency */,
-			);
-			name = ForwardPlusRendererPortTests;
-			productName = ForwardPlusRendererPortTests;
-			productReference = BCB980542ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		BCB9805D2ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = BCB9806E2ABB3DAA00CC5B08 /* Build configuration list for PBXNativeTarget "ForwardPlusRendererPortUITests" */;
-			buildPhases = (
-				BCB9805A2ABB3DAA00CC5B08 /* Sources */,
-				BCB9805B2ABB3DAA00CC5B08 /* Frameworks */,
-				BCB9805C2ABB3DAA00CC5B08 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				BCB980602ABB3DAA00CC5B08 /* PBXTargetDependency */,
-			);
-			name = ForwardPlusRendererPortUITests;
-			productName = ForwardPlusRendererPortUITests;
-			productReference = BCB9805E2ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -193,19 +199,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					New,
+				);
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					BCB9803B2ABB3DA800CC5B08 = {
 						CreatedOnToolsVersion = 15.0;
-					};
-					BCB980532ABB3DAA00CC5B08 = {
-						CreatedOnToolsVersion = 15.0;
-						TestTargetID = BCB9803B2ABB3DA800CC5B08;
-					};
-					BCB9805D2ABB3DAA00CC5B08 = {
-						CreatedOnToolsVersion = 15.0;
-						TestTargetID = BCB9803B2ABB3DA800CC5B08;
 					};
 				};
 			};
@@ -223,8 +224,6 @@
 			projectRoot = "";
 			targets = (
 				BCB9803B2ABB3DA800CC5B08 /* ForwardPlusRendererPort */,
-				BCB980532ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests */,
-				BCB9805D2ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -237,20 +236,7 @@
 				BCB9804F2ABB3DAA00CC5B08 /* LaunchScreen.storyboard in Resources */,
 				BCB9804C2ABB3DAA00CC5B08 /* Assets.xcassets in Resources */,
 				BCB9804A2ABB3DA800CC5B08 /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BCB980522ABB3DAA00CC5B08 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BCB9805C2ABB3DAA00CC5B08 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				BCACD8E92AC58BE00079BF71 /* Meshes in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,44 +247,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCB980472ABB3DA800CC5B08 /* Shaders.metal in Sources */,
-				BCB980432ABB3DA800CC5B08 /* Renderer.swift in Sources */,
+				BCB980432ABB3DA800CC5B08 /* FPRenderer.swift in Sources */,
 				BCB980452ABB3DA800CC5B08 /* GameViewController.swift in Sources */,
+				BC0A23ED2ABD7ECA00CA6587 /* FPMesh.swift in Sources */,
+				BCD01CB32AC2A52500A098C2 /* FPFairy.metal in Sources */,
 				BCB980402ABB3DA800CC5B08 /* AppDelegate.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BCB980502ABB3DAA00CC5B08 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BCB980592ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BCB9805A2ABB3DAA00CC5B08 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BCB980652ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITestsLaunchTests.swift in Sources */,
-				BCB980632ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests.swift in Sources */,
+				BCB9807C2ABC3C8300CC5B08 /* MathUtilities.swift in Sources */,
+				BCB980782ABC273800CC5B08 /* FPCulling.metal in Sources */,
+				BCB9807A2ABC282800CC5B08 /* FPForward.metal in Sources */,
+				BCB980722ABC24A500CC5B08 /* FPDepthPass.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		BCB980562ABB3DAA00CC5B08 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BCB9803B2ABB3DA800CC5B08 /* ForwardPlusRendererPort */;
-			targetProxy = BCB980552ABB3DAA00CC5B08 /* PBXContainerItemProxy */;
-		};
-		BCB980602ABB3DAA00CC5B08 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BCB9803B2ABB3DA800CC5B08 /* ForwardPlusRendererPort */;
-			targetProxy = BCB9805F2ABB3DAA00CC5B08 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		BCB980482ABB3DA800CC5B08 /* Main.storyboard */ = {
@@ -327,6 +288,8 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_ANALYZER_OSOBJECT_C_STYLE_CAST = NO;
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -355,6 +318,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_ON_DEMAND_RESOURCES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -372,7 +336,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -380,6 +344,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -390,6 +355,8 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_ANALYZER_OSOBJECT_C_STYLE_CAST = NO;
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -416,9 +383,10 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_ON_DEMAND_RESOURCES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -429,12 +397,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -442,19 +412,23 @@
 		BCB980692ABB3DAA00CC5B08 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ForwardPlusRendererPort/ForwardPlusRendererPort.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = DPXLR65392;
+				ENABLE_ON_DEMAND_RESOURCES = "$(__IS_NOT_MACOS)";
+				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UIRequiredDeviceCapabilities = metal;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -462,29 +436,36 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cuthbert.ForwardPlusRendererPort;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(TARGET_NAME)/ShaderTypes.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(TARGET_NAME)/FPShaderTypes.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
 		BCB9806A2ABB3DAA00CC5B08 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ForwardPlusRendererPort/ForwardPlusRendererPort.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = DPXLR65392;
+				ENABLE_ON_DEMAND_RESOURCES = "$(__IS_NOT_MACOS)";
+				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UIRequiredDeviceCapabilities = metal;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -492,86 +473,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cuthbert.ForwardPlusRendererPort;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(TARGET_NAME)/ShaderTypes.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(TARGET_NAME)/FPShaderTypes.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		BCB9806C2ABB3DAA00CC5B08 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = DPXLR65392;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cuthbert.ForwardPlusRendererPortTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ForwardPlusRendererPort.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ForwardPlusRendererPort";
-			};
-			name = Debug;
-		};
-		BCB9806D2ABB3DAA00CC5B08 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = DPXLR65392;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cuthbert.ForwardPlusRendererPortTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ForwardPlusRendererPort.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ForwardPlusRendererPort";
-			};
-			name = Release;
-		};
-		BCB9806F2ABB3DAA00CC5B08 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = DPXLR65392;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cuthbert.ForwardPlusRendererPortUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = ForwardPlusRendererPort;
-			};
-			name = Debug;
-		};
-		BCB980702ABB3DAA00CC5B08 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = DPXLR65392;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cuthbert.ForwardPlusRendererPortUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = ForwardPlusRendererPort;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
@@ -592,24 +500,6 @@
 			buildConfigurations = (
 				BCB980692ABB3DAA00CC5B08 /* Debug */,
 				BCB9806A2ABB3DAA00CC5B08 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		BCB9806B2ABB3DAA00CC5B08 /* Build configuration list for PBXNativeTarget "ForwardPlusRendererPortTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BCB9806C2ABB3DAA00CC5B08 /* Debug */,
-				BCB9806D2ABB3DAA00CC5B08 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		BCB9806E2ABB3DAA00CC5B08 /* Build configuration list for PBXNativeTarget "ForwardPlusRendererPortUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BCB9806F2ABB3DAA00CC5B08 /* Debug */,
-				BCB980702ABB3DAA00CC5B08 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
