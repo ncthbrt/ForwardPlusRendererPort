@@ -14,8 +14,8 @@
             filePath = "ForwardPlusRendererPort/FPMesh.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "181"
-            endingLineNumber = "181"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
             landmarkName = "processObject(obj:modelIOVertexDescriptor:metalKitTextureLoader:device:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "ForwardPlusRendererPort/FPMesh.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "183"
-            endingLineNumber = "183"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "processObject(obj:modelIOVertexDescriptor:metalKitTextureLoader:device:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -40,16 +40,48 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "0681C7E3-8124-4278-8F3B-8F65CB8A6F01"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ForwardPlusRendererPort/FPMesh.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
             landmarkName = "init(modelIOMesh:modelIOVertexDescriptor:metalKitTextureLoader:device:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "0681C7E3-8124-4278-8F3B-8F65CB8A6F01 - e11cd97baaa6c6b6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ForwardPlusRendererPort.FPMesh.init(modelIOMesh: __C.MDLMesh, modelIOVertexDescriptor: __C.MDLVertexDescriptor, metalKitTextureLoader: __C.MTKTextureLoader, device: __C.MTLDevice) throws -&gt; ForwardPlusRendererPort.FPMesh"
+                  moduleName = "ForwardPlusRendererPort"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nataliecuthbert/Documents/XCodeProjects/ForwardPlusRendererPort/ForwardPlusRendererPort/FPMesh.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "148"
+                  endingLineNumber = "148"
+                  offsetFromSymbolStart = "768">
+               </Location>
+               <Location
+                  uuid = "0681C7E3-8124-4278-8F3B-8F65CB8A6F01 - e11cd97baaa6c574"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ForwardPlusRendererPort.FPMesh.init(modelIOMesh: __C.MDLMesh, modelIOVertexDescriptor: __C.MDLVertexDescriptor, metalKitTextureLoader: __C.MTKTextureLoader, device: __C.MTLDevice) throws -&gt; ForwardPlusRendererPort.FPMesh"
+                  moduleName = "ForwardPlusRendererPort"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nataliecuthbert/Documents/XCodeProjects/ForwardPlusRendererPort/ForwardPlusRendererPort/FPMesh.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "146"
+                  endingLineNumber = "146"
+                  offsetFromSymbolStart = "768">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

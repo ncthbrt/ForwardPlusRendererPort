@@ -74,6 +74,8 @@ class FPRenderer: NSObject, MTKViewDelegate {
     var farPlane: Float = 1500.0
     var fov: Float = 65.0 * (.pi / 180.0)
     
+    var currentBufferIndex: Int = 0;
+    
     var projectionMatrix: matrix_float4x4 = matrix_float4x4()
     
     var rotation: Float = 0
@@ -311,7 +313,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
             self.meshes = Array()
         }
         
-        guard let lightData = device.makeBuffer(length: MemoryLayout<FPPointLight>.size*Int(FPNumLights), options: .storageModeShared) else {
+        guard let lightData = device.makeBuffer(length: MemoryLayout<FPPointLight>.stride*Int(FPNumLights), options: .storageModeShared) else {
             return nil
         }
         self.lightsData = lightData
@@ -381,7 +383,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
             
             let lightPosition = vector_float4(distance*sinf(angle),height,distance*cosf(angle),lightData.lightRadius)
             
-            lightDataContents.storeBytes(of: lightData, toByteOffset: MemoryLayout<FPPointLight>.size*Int(lightId), as: FPPointLight.self)
+            lightDataContents.storeBytes(of: lightData, toByteOffset: MemoryLayout<FPPointLight>.stride*Int(lightId), as: FPPointLight.self)
             lightWorldPositionContents.storeBytes(of: lightPosition, toByteOffset: MemoryLayout<vector_float4>.size*Int(lightId), as: vector_float4.self)
         }
 
@@ -391,94 +393,138 @@ class FPRenderer: NSObject, MTKViewDelegate {
         super.init()
     }
     
-    
-//    class func buildRenderPipelineWithDevice(device: MTLDevice,
-//                                             metalKitView: MTKView,
-//                                             mtlVertexDescriptor: MTLVertexDescriptor) throws -> MTLRenderPipelineState {
-//        /// Build a render state pipeline object
-//        
-//        let library = device.makeDefaultLibrary()
-//        
-//        let vertexFunction = library?.makeFunction(name: "vertexShader")
-//        let fragmentFunction = library?.makeFunction(name: "fragmentShader")
-//        
-//        let pipelineDescriptor = MTLRenderPipelineDescriptor()
-//        pipelineDescriptor.label = "RenderPipeline"
-//        pipelineDescriptor.rasterSampleCount = metalKitView.sampleCount
-//        pipelineDescriptor.vertexFunction = vertexFunction
-//        pipelineDescriptor.fragmentFunction = fragmentFunction
-//        pipelineDescriptor.vertexDescriptor = mtlVertexDescriptor
-//        
-//        pipelineDescriptor.colorAttachments[0].pixelFormat = metalKitView.colorPixelFormat
-//        pipelineDescriptor.depthAttachmentPixelFormat = metalKitView.depthStencilPixelFormat
-//        pipelineDescriptor.stencilAttachmentPixelFormat = metalKitView.depthStencilPixelFormat
-//        
-//        return try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
-//    }
-    
-//    class func buildMesh(device: MTLDevice,
-//                         mtlVertexDescriptor: MTLVertexDescriptor) throws -> MTKMesh {
-//        /// Create and condition mesh data to feed into a pipeline using the given vertex descriptor
-//        
-//        let metalAllocator = MTKMeshBufferAllocator(device: device)
-//        
-//        let mdlMesh = MDLMesh.newBox(withDimensions: SIMD3<Float>(4, 4, 4),
-//                                     segments: SIMD3<UInt32>(2, 2, 2),
-//                                     geometryType: MDLGeometryType.triangles,
-//                                     inwardNormals:false,
-//                                     allocator: metalAllocator)
-//        
-//        let mdlVertexDescriptor = MTKModelIOVertexDescriptorFromMetal(mtlVertexDescriptor)
-//        
-//        guard let attributes = mdlVertexDescriptor.attributes as? [MDLVertexAttribute] else {
-//            throw RendererError.badVertexDescriptor
-//        }
-//        attributes[VertexAttribute.position.rawValue].name = MDLVertexAttributePosition
-//        attributes[VertexAttribute.texcoord.rawValue].name = MDLVertexAttributeTextureCoordinate
-//        
-//        mdlMesh.vertexDescriptor = mdlVertexDescriptor
-//        
-//        return try MTKMesh(mesh:mdlMesh, device:device)
-//    }
-//    
-//    class func loadTexture(device: MTLDevice,
-//                           textureName: String) throws -> MTLTexture {
-//        /// Load texture data with optimal parameters for sampling
-//        
-//        let textureLoader = MTKTextureLoader(device: device)
-//        
-//        let textureLoaderOptions = [
-//            MTKTextureLoader.Option.textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue),
-//            MTKTextureLoader.Option.textureStorageMode: NSNumber(value: MTLStorageMode.`private`.rawValue)
-//        ]
-//        
-//        return try textureLoader.newTexture(name: textureName,
-//                                            scaleFactor: 1.0,
-//                                            bundle: nil,
-//                                            options: textureLoaderOptions)
-//        
-//    }
-    
-    private func updateDynamicBufferState() {
-//        /// Update the state of our uniform buffers before rendering
-//        
-//        uniformBufferIndex = (uniformBufferIndex + 1) % maxBuffersInFlight
-//        
-//        uniformBufferOffset = alignedUniformsSize * uniformBufferIndex
-//        
-//        uniforms = UnsafeMutableRawPointer(dynamicUniformBuffer.contents() + uniformBufferOffset).bindMemory(to:Uniforms.self, capacity:1)
+    func updateLights() {
+        let previousFramesBufferIndex = (self.currentBufferIndex+maxBuffersInFlight-1)%maxBuffersInFlight
+
+        
+        let lightDataContents = self.lightsData.contents()
+        let frameData = self.frameDataBuffers[currentBufferIndex].contents().load(as: FPFrameData.self);
+        
+        let viewMatrix = frameData.viewMatrix;
+
+        let previousWorldSpacePositionsContents = lightWorldPositions[previousFramesBufferIndex].contents()
+        let currentWorldSpaceLightPositionsContents = lightWorldPositions[currentBufferIndex].contents()
+        let currentEyeSpaceLightPositionContents = lightEyePositions[currentBufferIndex].contents()
+        
+        for i in 0..<FPNumLights
+        {
+            let lightData = lightDataContents.advanced(by: MemoryLayout<FPPointLight>.stride).load(as: FPPointLight.self)
+            
+            let rotation = matrix4x4_rotation(radians: lightData.lightSpeed, axis: vector_float3(0, 1.0, 0.0));
+
+            let previousWorldSpacePositionVector3 = previousWorldSpacePositionsContents.advanced(by: MemoryLayout<vector_float3>.stride).load(as: vector_float3.self);
+            
+            let previousWorldSpacePosition = vector_float4(
+               previousWorldSpacePositionVector3.x,
+               previousWorldSpacePositionVector3.y,
+               previousWorldSpacePositionVector3.z,
+               1
+           );
+
+            var currentWorldSpacePosition = matrix_multiply(rotation, previousWorldSpacePosition);
+            var currentEyeSpacePosition = matrix_multiply(viewMatrix, currentWorldSpacePosition);
+
+            currentWorldSpacePosition.w = lightData.lightRadius;
+            currentEyeSpacePosition.w = lightData.lightRadius;
+
+            currentWorldSpaceLightPositionsContents.advanced(by: Int(i)*MemoryLayout<vector_float3>.stride).storeBytes(of: vector_float3(currentWorldSpacePosition.x,currentWorldSpacePosition.y, currentWorldSpacePosition.z), as: vector_float3.self);
+            currentEyeSpaceLightPositionContents.advanced(by: Int(i)*MemoryLayout<vector_float3>.stride).storeBytes(of: vector_float3(currentEyeSpacePosition.x,currentEyeSpacePosition.y, currentEyeSpacePosition.z), as: vector_float3.self);
+        }
+
     }
-//    
-    private func updateGameState() {
-        /// Update any game state before rendering
-//        
-//        uniforms[0].projectionMatrix = projectionMatrix
-//        
-//        let rotationAxis = SIMD3<Float>(1, 1, 0)
-//        let modelMatrix = matrix4x4_rotation(radians: rotation, axis: rotationAxis)
-//        let viewMatrix = matrix4x4_translation(0.0, 0.0, -8.0)
-//        uniforms[0].modelViewMatrix = simd_mul(viewMatrix, modelMatrix)
-//        rotation += 0.01
+    
+    
+    func updateFrameState()
+    {
+        self.currentBufferIndex = (self.currentBufferIndex + 1) % maxBuffersInFlight;
+
+        var frameData = frameDataBuffers[currentBufferIndex].contents().load(as: FPFrameData.self);
+
+        
+        // Update ambient light color.
+        let ambientLightColor = vector_float3(0.05, 0.05, 0.05)
+        frameData.ambientLightColor = ambientLightColor
+
+        // Update directional light direction in world space.
+        let directionalLightDirection = vector_float3(1.0, -1.0, 1.0)
+        frameData.directionalLightDirection = directionalLightDirection
+
+        // Update directional light color.
+        let directionalLightColor = vector_float3(0.4, 0.4, 0.4)
+        frameData.directionalLightColor = directionalLightColor
+
+        // Set projection matrix and calculate inverted projection matrix.
+        frameData.projectionMatrix = projectionMatrix
+        frameData.projectionMatrixInv = projectionMatrix.inverse
+        frameData.depthUnproject = vector2(farPlane / (farPlane - nearPlane), (-farPlane * nearPlane) / (farPlane - nearPlane));
+
+        // Set screen dimensions.
+        frameData.framebufferWidth = UInt32(drawableSize.width);
+        frameData.framebufferHeight = UInt32(drawableSize.height);
+
+        let fovScale = tanf(0.5 * fov) * 2.0;
+        let aspectRatio = Float(frameData.framebufferWidth) / Float(frameData.framebufferHeight);
+        frameData.screenToViewSpace = vector_float3(fovScale / Float(frameData.framebufferHeight), -fovScale * 0.5 * aspectRatio, -fovScale * 0.5);
+
+        // Calculate new view matrix and inverted view matrix.
+        frameData.viewMatrix = matrix_multiply(matrix4x4_translation(0.0, -75, 1000.5),
+                                               matrix_multiply(matrix4x4_rotation(radians:-0.5, axis: vector_float3(1,0,0)),
+                                                               matrix4x4_rotation(radians: rotation, axis:vector_float3(0,1,0))));
+        frameData.viewMatrixInv = frameData.viewMatrix.inverse;
+
+        let rotationAxis = vector_float3(0, 1, 0);
+        var modelMatrix = matrix4x4_rotation(radians:0, axis: rotationAxis);
+        let translation = matrix4x4_translation(0.0, 0, 0);
+        modelMatrix = matrix_multiply(modelMatrix, translation);
+
+        frameData.modelViewMatrix = matrix_multiply(frameData.viewMatrix, modelMatrix);
+        frameData.modelMatrix = modelMatrix;
+
+        frameData.normalMatrix = matrix3x3_upper_left(frameData.modelViewMatrix);
+        frameData.normalMatrix = frameData.normalMatrix.transpose.inverse;
+        
+        rotation += 0.002;
+        
+        frameDataBuffers[currentBufferIndex].contents().storeBytes(of: frameData, as: FPFrameData.self);
+
+        self.updateLights();
+    }
+    
+    /// Draw the mesh objects with the given render command encoder.
+    func drawMeshes(_ renderEncoder: MTLRenderCommandEncoder)
+    {
+        for mesh in meshes
+        {
+            let metalKitMesh = mesh.metalKitMesh;
+
+            // Set the mesh's vertex buffers.
+            for bufferIndex in 0..<metalKitMesh.vertexBuffers.count {
+                let vertexBuffer = metalKitMesh.vertexBuffers[bufferIndex];
+                if(vertexBuffer.length > 0){
+                    renderEncoder.setVertexBuffer(vertexBuffer.buffer,  offset:vertexBuffer.offset, index:bufferIndex);
+                }
+            }
+
+            // Draw each submesh of the mesh.
+            for submesh in mesh.submeshes
+            {
+                // Set any textures that you read or sample in the render pipeline.
+                renderEncoder.setFragmentTexture(submesh.textures[FPTextureIndices.textureIndexBaseColor.rawValue], index:FPTextureIndices.textureIndexBaseColor.rawValue);
+
+                renderEncoder.setFragmentTexture(submesh.textures[FPTextureIndices.textureIndexNormal.rawValue], index:FPTextureIndices.textureIndexNormal.rawValue);
+                
+                renderEncoder.setFragmentTexture(submesh.textures[FPTextureIndices.textureIndexSpecular.rawValue], index:FPTextureIndices.textureIndexSpecular.rawValue);
+
+                let metalKitSubmesh = submesh.metalKitSubmesh;
+
+                renderEncoder.drawIndexedPrimitives(type: metalKitSubmesh.primitiveType,
+                                          indexCount:metalKitSubmesh.indexCount,
+                                           indexType:metalKitSubmesh.indexType,
+                                         indexBuffer:metalKitSubmesh.indexBuffer.buffer,
+                                   indexBufferOffset:metalKitSubmesh.indexBuffer.offset
+                );
+            }
+        }
     }
     
     func draw(in view: MTKView) {
@@ -493,55 +539,79 @@ class FPRenderer: NSObject, MTKViewDelegate {
                 semaphore.signal()
             }
             
-            self.updateDynamicBufferState()
-            
-            self.updateGameState()
+            self.updateFrameState()
             
             /// Delay getting the currentRenderPassDescriptor until we absolutely need it to avoid
             ///   holding onto the drawable and blocking the display pipeline any longer than necessary
             let renderPassDescriptor = view.currentRenderPassDescriptor
             
             if let renderPassDescriptor = renderPassDescriptor, let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) {
+                // Check if there is a drawable to render content to.
+                if(view.currentDrawable != nil)
+                {
+                    if(FPNumSamples > 1)
+                    {
+                        viewRenderPassDescriptor.colorAttachments[FPRenderTargetIndices.lighting.rawValue].resolveTexture = view.currentDrawable!.texture;
+                    }
+                    else
+                    {
+                        viewRenderPassDescriptor.colorAttachments[FPRenderTargetIndices.lighting.rawValue].texture =
+                        view.currentDrawable!.texture;
+                    }
+
+                    renderEncoder.setCullMode(.back);
+
+                    // Render scene to depth buffer only. You later use this data to determine the minimum and
+                    // maximum depth values of each tile.
+                    renderEncoder.pushDebugGroup("Depth Pre-Pass");
+                    renderEncoder.setRenderPipelineState(depthPrePassPipelineState);
+                    renderEncoder.setDepthStencilState(depthState);
+                    renderEncoder.setVertexBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
+                    self.drawMeshes(renderEncoder);
+                    renderEncoder.popDebugGroup();
+                    
+
+                    // Calculate light bins.
+                    renderEncoder.pushDebugGroup("Calculate Light Bins");
+                    renderEncoder.setRenderPipelineState(lightBinCreationPipelineState);
+                    let binBufferSize = max(Int(FPMaxLightsPerTile)*Int(MemoryLayout<Int32>.size), Int(FPTileWidth) * Int(FPTileHeight) * Int(MemoryLayout<Int32>.size))
+                    renderEncoder.setThreadgroupMemoryLength(Int(FPTileDataSize), offset:binBufferSize, index:FPThreadgroupIndices.bufferIndexTileData.rawValue);
+                    renderEncoder.dispatchThreadsPerTile(MTLSizeMake(Int(FPTileWidth), Int(FPTileHeight), 1));
+                    renderEncoder.popDebugGroup();
+                        // Perform tile culling, to minimize the number of lights rendered per tile.
+                    renderEncoder.pushDebugGroup("Prepare Light Lists");
+                    renderEncoder.setRenderPipelineState(lightCullingPipelineState);
+                    renderEncoder.setThreadgroupMemoryLength(binBufferSize, offset:0, index:FPThreadgroupIndices.bufferIndexLightList.rawValue);
+                    renderEncoder.setThreadgroupMemoryLength(binBufferSize, offset:binBufferSize, index: FPThreadgroupIndices.bufferIndexTileData.rawValue);
+                    renderEncoder.setTileBuffer(frameDataBuffers[currentBufferIndex], offset:0, index: FPBufferIndices.indexFrameData.rawValue);
+                    renderEncoder.setTileBuffer(lightEyePositions[currentBufferIndex], offset:0, index:FPBufferIndices.indexLightsPosition.rawValue);
+                    renderEncoder.dispatchThreadsPerTile(MTLSizeMake(Int(FPTileWidth),Int(FPTileHeight),1));
+                    renderEncoder.popDebugGroup();
+
+                    // Render objects with lighting.
+                    renderEncoder.pushDebugGroup("Render Forward Lighting");
+                    renderEncoder.setRenderPipelineState(forwardLightingPipelineState);
+                    renderEncoder.setDepthStencilState(relaxedDepthState);
+                    renderEncoder.setVertexBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
+                    renderEncoder.setFragmentBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
+                    renderEncoder.setFragmentBuffer(lightsData, offset:0, index:FPBufferIndices.indexLightsData.rawValue);
+                    renderEncoder.setFragmentBuffer(lightWorldPositions[currentBufferIndex], offset:0, index:FPBufferIndices.indexLightsPosition.rawValue);
+                    self.drawMeshes(renderEncoder);
+                    renderEncoder.popDebugGroup();
+
+                    // Draw fairies.
+                    renderEncoder.pushDebugGroup("Draw Fairies");
+                    renderEncoder.setRenderPipelineState(fairyPipelineState);
+                    renderEncoder.setDepthStencilState(depthState);
+                    renderEncoder.setVertexBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
+                    renderEncoder.setVertexBuffer(fairy, offset:0, index:FPBufferIndices.indexMeshPositions.rawValue);
+                    renderEncoder.setVertexBuffer(lightsData, offset:0, index:FPBufferIndices.indexLightsData.rawValue);
+                    renderEncoder.setVertexBuffer(lightWorldPositions[currentBufferIndex], offset:0, index:FPBufferIndices.indexLightsPosition.rawValue);
+                    renderEncoder.drawPrimitives(type: .triangleStrip,vertexStart:0, vertexCount:FPNumFairyVertices, instanceCount: Int(FPNumLights));
+                    renderEncoder.popDebugGroup();
+                }
                 
-                /// Final pass rendering code here
-//                renderEncoder.label = "Primary Render Encoder"
-//                
-//                renderEncoder.pushDebugGroup("Draw Box")
-//                
-//                renderEncoder.setCullMode(.back)
-//                
-//                renderEncoder.setFrontFacing(.counterClockwise)
-//                
-//                renderEncoder.setRenderPipelineState(pipelineState)
-//                
-//                renderEncoder.setDepthStencilState(depthState)
-//                
-//                renderEncoder.setVertexBuffer(dynamicUniformBuffer, offset:uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
-//                renderEncoder.setFragmentBuffer(dynamicUniformBuffer, offset:uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
-//                
-//                for (index, element) in mesh.vertexDescriptor.layouts.enumerated() {
-//                    guard let layout = element as? MDLVertexBufferLayout else {
-//                        return
-//                    }
-//                    
-//                    if layout.stride != 0 {
-//                        let buffer = mesh.vertexBuffers[index]
-//                        renderEncoder.setVertexBuffer(buffer.buffer, offset:buffer.offset, index: index)
-//                    }
-//                }
-//                
-//                renderEncoder.setFragmentTexture(colorMap, index: TextureIndex.color.rawValue)
-//                
-//                for submesh in mesh.submeshes {
-//                    renderEncoder.drawIndexedPrimitives(type: submesh.primitiveType,
-//                                                        indexCount: submesh.indexCount,
-//                                                        indexType: submesh.indexType,
-//                                                        indexBuffer: submesh.indexBuffer.buffer,
-//                                                        indexBufferOffset: submesh.indexBuffer.offset)
-//                    
-//                }
-//                
-//                renderEncoder.popDebugGroup()
+
                 
                 renderEncoder.endEncoding()
                 
@@ -556,10 +626,6 @@ class FPRenderer: NSObject, MTKViewDelegate {
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         /// Respond to drawable size or orientation changes here
-        
-//        let aspect = Float(size.width) / Float(size.height)
-//        projectionMatrix = matrix_perspective_right_hand(fovyRadians: radians_from_degrees(65), aspectRatio:aspect, nearZ: 0.1, farZ: 100.0)
-        
         self.drawableSize = size
 
         // Update the aspect ratio and projection matrix because the view orientation
@@ -602,6 +668,17 @@ class FPRenderer: NSObject, MTKViewDelegate {
         let depthDataTexture = self.device.makeTexture(descriptor: textureDescriptor);
         self.viewRenderPassDescriptor.colorAttachments[1].texture = depthDataTexture;
     }
+}
+
+func matrix_make_columns(_ col0:vector_float3, _ col1:vector_float3 , _ col2: vector_float3) -> matrix_float3x3 {
+    return matrix_float3x3(col0, col1, col2);
+}
+
+func matrix3x3_upper_left(_ m: matrix_float4x4) -> matrix_float3x3 {
+    let x = vector_float3(m.columns.0.x,m.columns.0.y, m.columns.0.z);
+    let y = vector_float3(m.columns.1.x,m.columns.1.y, m.columns.1.z);
+    let z = vector_float3(m.columns.2.x,m.columns.2.y, m.columns.2.z);
+    return matrix_make_columns(x, y, z);
 }
 
 // Generic matrix math utility functions

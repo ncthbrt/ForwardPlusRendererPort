@@ -30,11 +30,6 @@
 
 /* Begin PBXFileReference section */
 		BC0A23EC2ABD7ECA00CA6587 /* FPMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPMesh.swift; sourceTree = "<group>"; };
-		BC3FBB322AC5CB370096ED06 /* FPRendererApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPRendererApp.swift; sourceTree = "<group>"; };
-		BC3FBB342AC5CB370096ED06 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		BC3FBB362AC5CB370096ED06 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
-		BC3FBB382AC5CB390096ED06 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		BC3FBB3B2AC5CB390096ED06 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BCACD8E82AC58BE00079BF71 /* Meshes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Meshes; sourceTree = "<group>"; };
 		BCACD8EA2AC5C0630079BF71 /* ForwardPlusRendererPort.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ForwardPlusRendererPort.entitlements; sourceTree = "<group>"; };
 		BCACD8EC2AC5C8EE0079BF71 /* MetalPerformanceShadersGraph.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShadersGraph.framework; path = System/Library/Frameworks/MetalPerformanceShadersGraph.framework; sourceTree = SDKROOT; };
@@ -79,26 +74,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BC3FBB312AC5CB370096ED06 /* FPRenderer */ = {
-			isa = PBXGroup;
-			children = (
-				BC3FBB322AC5CB370096ED06 /* FPRendererApp.swift */,
-				BC3FBB342AC5CB370096ED06 /* ContentView.swift */,
-				BC3FBB362AC5CB370096ED06 /* Item.swift */,
-				BC3FBB382AC5CB390096ED06 /* Assets.xcassets */,
-				BC3FBB3A2AC5CB390096ED06 /* Preview Content */,
-			);
-			path = FPRenderer;
-			sourceTree = "<group>";
-		};
-		BC3FBB3A2AC5CB390096ED06 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				BC3FBB3B2AC5CB390096ED06 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 		BCACD8EB2AC5C8EE0079BF71 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -118,7 +93,6 @@
 				BCB9803E2ABB3DA800CC5B08 /* ForwardPlusRendererPort */,
 				BCB980572ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests */,
 				BCB980612ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests */,
-				BC3FBB312AC5CB370096ED06 /* FPRenderer */,
 				BCB9803D2ABB3DA800CC5B08 /* Products */,
 				BCACD8EB2AC5C8EE0079BF71 /* Frameworks */,
 			);
@@ -336,7 +310,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -397,7 +371,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -428,7 +402,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -465,7 +439,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -86,8 +86,6 @@ class FPSubmesh : NSObject {
                 //   with -[MTKTextureLoader newTextureWithName:scaleFactor:bundle:options::error:]
 
                 let lastComponent = textureURL?.lastPathComponent
-//                NSString *lastComponent =
-//                    [[URLString componentsSeparatedByString:@"/"] lastObject];
 
                 do {
                     texture = try metalKitTextureLoader.newTexture(name: lastComponent!, scaleFactor: 1.0, bundle: nil, options: textureLoaderOptions)
