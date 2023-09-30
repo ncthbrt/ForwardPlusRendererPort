@@ -37,9 +37,6 @@ fragment ColorData depth_pre_pass_fragment(VertexOutput in [[ stage_in ]])
 {
     // Populate on-tile geometry buffer data.
     ColorData f;
-
-    // Setting color in the depth pre-pass is unnecessary, but may make debugging easier.
-    // f.lighting=half4(0,0,0,1);
     
     // Set the depth in clip space, which you use in `FPCulling` to perform per-tile light culling.
     f.depth = in.position.z;

@@ -115,7 +115,8 @@ typedef struct
 
 // Temporary buffer used for depth reduction.
 // Buffer size needs to be at least tile width * tile height * 4.
-#define FPThreadgroupBufferSize MAX(FPMaxLightsPerTile*sizeof(uint32_t),FPTileWidth*FPTileHeight*sizeof(uint32_t))
+#define FPThreadgroupBufferSize MAX(FPMaxLightsPerTile*sizeof(uint32_t), FPTileWidth*FPTileHeight*sizeof(uint32_t))
+
 
 #endif /* FPShaderTypes_h */
 

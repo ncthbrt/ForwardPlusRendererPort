@@ -43,6 +43,8 @@ let FPDepthDataPixelFormat = MTLPixelFormat.r32Float;
 
 let FPDepthBufferPixelFormat = MTLPixelFormat.depth32Float;
 
+let FPThreadgroupBufferSize = max(Int(FPMaxLightsPerTile)*MemoryLayout<__uint32_t>.size, Int(FPTileWidth)*Int(FPTileHeight)*MemoryLayout<__uint32_t>.size);
+
 
 class FPRenderer: NSObject, MTKViewDelegate {
     
@@ -71,7 +73,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
     var lightEyePositions: [MTLBuffer] = Array()
     
     var nearPlane: Float = 1.0
-    var farPlane: Float = 1500.0
+    var farPlane: Float = 100.0
     var fov: Float = 65.0 * (.pi / 180.0)
     
     var currentBufferIndex: Int = 0;
@@ -162,21 +164,21 @@ class FPRenderer: NSObject, MTKViewDelegate {
 
         renderPipelineStateDescriptor.rasterSampleCount = Int(FPNumSamples)
         renderPipelineStateDescriptor.vertexDescriptor = vertexDescriptor
-
-        renderPipelineStateDescriptor.colorAttachments[FPRenderTargetIndices.lighting.rawValue].pixelFormat = metalKitView.colorPixelFormat
+        renderPipelineStateDescriptor.colorAttachments[FPRenderTargetIndices.lighting.rawValue].pixelFormat = metalKitView.colorPixelFormat;
         renderPipelineStateDescriptor.colorAttachments[FPRenderTargetIndices.depth.rawValue].pixelFormat = FPDepthDataPixelFormat
 
         renderPipelineStateDescriptor.depthAttachmentPixelFormat = FPDepthBufferPixelFormat
-        
+
         
         // Set unique descriptor values for the depth pre-pass pipeline state.
         let depthPrePassVertexFunction = library.makeFunction(name: "depth_pre_pass_vertex")
         let depthPrePassFragmentFunction = library.makeFunction(name: "depth_pre_pass_fragment")
         renderPipelineStateDescriptor.label = "Depth Pre-Pass"
+        
         renderPipelineStateDescriptor.vertexDescriptor = vertexDescriptor
         renderPipelineStateDescriptor.vertexFunction = depthPrePassVertexFunction
         renderPipelineStateDescriptor.fragmentFunction = depthPrePassFragmentFunction
-
+        
         try! self.depthPrePassPipelineState = device.makeRenderPipelineState(descriptor: renderPipelineStateDescriptor)
 
         // Set unique descriptor values for the standard material pipeline state.
@@ -202,6 +204,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
         renderPipelineStateDescriptor.fragmentFunction = fairyFragmentFunction
         try! self.fairyPipelineState = device.makeRenderPipelineState(descriptor: renderPipelineStateDescriptor)
         
+        
         let binCreationKernel = library.makeFunction(name:"create_bins")!
 
         let binCreationPipelineDescriptor = MTLTileRenderPipelineDescriptor()
@@ -211,11 +214,11 @@ class FPRenderer: NSObject, MTKViewDelegate {
         binCreationPipelineDescriptor.colorAttachments[FPRenderTargetIndices.depth.rawValue].pixelFormat = FPDepthDataPixelFormat
         binCreationPipelineDescriptor.threadgroupSizeMatchesTileSize = true
         binCreationPipelineDescriptor.tileFunction = binCreationKernel
-        try! self.lightBinCreationPipelineState = device.makeRenderPipelineState(tileDescriptor: binCreationPipelineDescriptor, options: MTLPipelineOption(), reflection: nil)
-
+        self.lightBinCreationPipelineState = try! device.makeRenderPipelineState(tileDescriptor: binCreationPipelineDescriptor, options: MTLPipelineOption(), reflection: nil)
 
         // Create a tile render pipeline state descriptor for the culling pipeline state.
-       
+
+        
         let tileRenderPipelineDescriptor = MTLTileRenderPipelineDescriptor()
         let lightCullingKernel = library.makeFunction(name: "cull_lights")
         tileRenderPipelineDescriptor.tileFunction = lightCullingKernel!
@@ -257,7 +260,6 @@ class FPRenderer: NSObject, MTKViewDelegate {
     
 
         // Create a render pass descriptor to render to the drawable
-        
         self.viewRenderPassDescriptor = MTLRenderPassDescriptor();
         self.viewRenderPassDescriptor.colorAttachments[FPRenderTargetIndices.lighting.rawValue].loadAction = .clear
         self.viewRenderPassDescriptor.colorAttachments[FPRenderTargetIndices.depth.rawValue].loadAction = .clear
@@ -272,8 +274,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
         self.viewRenderPassDescriptor.tileWidth = Int(FPTileWidth)
         self.viewRenderPassDescriptor.tileHeight = Int(FPTileHeight)
         
-        let bufferSize = max(Int(FPMaxLightsPerTile)*Int(MemoryLayout<Int32>.size), Int(FPTileWidth) * Int(FPTileHeight) * Int(MemoryLayout<Int32>.size))
-        self.viewRenderPassDescriptor.threadgroupMemoryLength = Int(bufferSize) + Int(FPTileDataSize)
+        self.viewRenderPassDescriptor.threadgroupMemoryLength = Int(FPThreadgroupBufferSize) + Int(FPTileDataSize)
 
         if(FPNumSamples > 1)
         {
@@ -295,14 +296,14 @@ class FPRenderer: NSObject, MTKViewDelegate {
         let modelIOVertexDescriptor = MTKModelIOVertexDescriptorFromMetal(vertexDescriptor)
         
         // Indicate how each Metal vertex descriptor attribute maps to each Model I/O attribute.
-        modelIOVertexDescriptor.attributes[FPVertexAttributes.position.rawValue]  = MDLVertexAttributePosition
-        modelIOVertexDescriptor.attributes[FPVertexAttributes.texcoord.rawValue]  = MDLVertexAttributeTextureCoordinate
-        modelIOVertexDescriptor.attributes[FPVertexAttributes.normal.rawValue]    = MDLVertexAttributeNormal
-        modelIOVertexDescriptor.attributes[FPVertexAttributes.tangent.rawValue]   = MDLVertexAttributeTangent
-        modelIOVertexDescriptor.attributes[FPVertexAttributes.bitangent.rawValue] = MDLVertexAttributeBitangent
+        (modelIOVertexDescriptor.attributes[FPVertexAttributes.position.rawValue] as! MDLVertexAttribute).name  = MDLVertexAttributePosition
+        (modelIOVertexDescriptor.attributes[FPVertexAttributes.texcoord.rawValue] as! MDLVertexAttribute).name = MDLVertexAttributeTextureCoordinate
+        (modelIOVertexDescriptor.attributes[FPVertexAttributes.normal.rawValue] as! MDLVertexAttribute).name = MDLVertexAttributeNormal
+        (modelIOVertexDescriptor.attributes[FPVertexAttributes.tangent.rawValue] as! MDLVertexAttribute).name  = MDLVertexAttributeTangent
+        (modelIOVertexDescriptor.attributes[FPVertexAttributes.bitangent.rawValue] as! MDLVertexAttribute).name = MDLVertexAttributeBitangent
 
         let modelFileURL = Bundle.main.url(forResource: "Meshes/Temple.obj", withExtension: nil)
-        assert(modelFileURL != nil, "Could not find model Temple.obj file in bundle")
+        assert(modelFileURL != nil, "Could not find model Meshes/Temple.obj file in bundle")
 
         // Create a MetalKit mesh buffer allocator so that ModelIO  will load mesh data directly into
         //   Metal buffers accessible by the GPU
@@ -322,16 +323,17 @@ class FPRenderer: NSObject, MTKViewDelegate {
         
         // Create a simple 2D triangle strip circle mesh for the fairies.
         let fairySize: Float = 2.5
-        var fairyVertices: [FPSimpleVertex] =  Array(repeating: FPSimpleVertex(), count: FPNumFairyVertices)
-        let angle = 2.0 * .pi / Float(FPNumFairyVertices);
-        for vtx in 0..<FPNumFairyVertices
-        {
-            let point = (vtx % 2 == 0) ? (vtx + 1) / 2 : -vtx / 2
-            fairyVertices[vtx].position =  vector_float2(x: sin(Float(point)*angle), y: cos(Float(point)*angle))
-            fairyVertices[vtx].position *= fairySize;
+        var fairyVertices: [FPSimpleVertex] =  Array()
+        fairyVertices.reserveCapacity(FPNumFairyVertices)
+        let angle = (2.0 * .pi) / Float(FPNumFairyVertices)
+        for index in 0..<FPNumFairyVertices {
+            let point = Float((index % 2) == 1 ? (index + 1) / 2 : -index / 2)
+            let position = SIMD2<Float>(sinf(point * angle), cosf(point * angle)) * fairySize
+            fairyVertices.append(FPSimpleVertex(position: position))
         }
 
-        guard let fairy = device.makeBuffer(bytes: fairyVertices, length: MemoryLayout.size(ofValue: fairyVertices), options: MTLResourceOptions()) else {
+        
+        guard let fairy = device.makeBuffer(bytes: fairyVertices, length: MemoryLayout<FPSimpleVertex>.stride*fairyVertices.count, options: .storageModeShared) else {
             return nil
         }
         
@@ -356,7 +358,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
             } else if(lightId < (FPNumLights*3)/4) {
                 distance = Float.random(in: 350...362)
                 height = Float.random(in:140...400);
-                angle = Float.random(in: 0...(.pi*2))
+                angle = Float.random(in: 0...(.pi*2.0))
             } else if(lightId < (FPNumLights*15)/16) {
                 distance = Float.random(in:400...480)
                 height = Float.random(in:68...80);
@@ -383,12 +385,18 @@ class FPRenderer: NSObject, MTKViewDelegate {
             
             let lightPosition = vector_float4(distance*sinf(angle),height,distance*cosf(angle),lightData.lightRadius)
             
-            lightDataContents.storeBytes(of: lightData, toByteOffset: MemoryLayout<FPPointLight>.stride*Int(lightId), as: FPPointLight.self)
-            lightWorldPositionContents.storeBytes(of: lightPosition, toByteOffset: MemoryLayout<vector_float4>.size*Int(lightId), as: vector_float4.self)
+            withUnsafePointer(to: lightData) {
+                lightDataContents.advanced(by: MemoryLayout<FPPointLight>.stride*Int(lightId)).copyMemory(from: $0, byteCount: MemoryLayout<FPPointLight>.stride)
+            }
+            
+            withUnsafePointer(to: lightPosition) {
+                lightWorldPositionContents.advanced(by: MemoryLayout<vector_float4>.stride*Int(lightId)).copyMemory(from: $0, byteCount: MemoryLayout<vector_float4>.stride)
+            }
+            
         }
 
-        memcpy(lightWorldPositions[1].contents(), lightWorldPositions[0].contents(), Int(FPNumLights) * MemoryLayout<vector_float3>.size)
-        memcpy(lightWorldPositions[2].contents(), lightWorldPositions[0].contents(), Int(FPNumLights) * MemoryLayout<vector_float3>.size)
+        memcpy(lightWorldPositions[1].contents(), lightWorldPositions[0].contents(), Int(FPNumLights) * MemoryLayout<vector_float3>.stride)
+        memcpy(lightWorldPositions[2].contents(), lightWorldPositions[0].contents(), Int(FPNumLights) * MemoryLayout<vector_float3>.stride)
 
         super.init()
     }
@@ -408,11 +416,11 @@ class FPRenderer: NSObject, MTKViewDelegate {
         
         for i in 0..<FPNumLights
         {
-            let lightData = lightDataContents.advanced(by: MemoryLayout<FPPointLight>.stride).load(as: FPPointLight.self)
+            let lightData = lightDataContents.advanced(by: Int(i)*MemoryLayout<FPPointLight>.stride).load(as: FPPointLight.self)
             
             let rotation = matrix4x4_rotation(radians: lightData.lightSpeed, axis: vector_float3(0, 1.0, 0.0));
 
-            let previousWorldSpacePositionVector3 = previousWorldSpacePositionsContents.advanced(by: MemoryLayout<vector_float3>.stride).load(as: vector_float3.self);
+            let previousWorldSpacePositionVector3 = previousWorldSpacePositionsContents.advanced(by: Int(i)*MemoryLayout<vector_float3>.stride).load(as: vector_float3.self);
             
             let previousWorldSpacePosition = vector_float4(
                previousWorldSpacePositionVector3.x,
@@ -427,8 +435,13 @@ class FPRenderer: NSObject, MTKViewDelegate {
             currentWorldSpacePosition.w = lightData.lightRadius;
             currentEyeSpacePosition.w = lightData.lightRadius;
 
-            currentWorldSpaceLightPositionsContents.advanced(by: Int(i)*MemoryLayout<vector_float3>.stride).storeBytes(of: vector_float3(currentWorldSpacePosition.x,currentWorldSpacePosition.y, currentWorldSpacePosition.z), as: vector_float3.self);
-            currentEyeSpaceLightPositionContents.advanced(by: Int(i)*MemoryLayout<vector_float3>.stride).storeBytes(of: vector_float3(currentEyeSpacePosition.x,currentEyeSpacePosition.y, currentEyeSpacePosition.z), as: vector_float3.self);
+            withUnsafePointer(to: vector_float3(currentWorldSpacePosition.x,currentWorldSpacePosition.y, currentWorldSpacePosition.z)) {
+                currentWorldSpaceLightPositionsContents.advanced(by: Int(i)*MemoryLayout<vector_float3>.stride).copyMemory(from: $0, byteCount: MemoryLayout<vector_float3>.stride)
+            }
+            
+            withUnsafePointer(to: vector_float3(currentEyeSpacePosition.x,currentEyeSpacePosition.y, currentEyeSpacePosition.z)) {
+                currentEyeSpaceLightPositionContents.advanced(by: Int(i)*MemoryLayout<vector_float3>.stride).copyMemory(from: $0, byteCount: MemoryLayout<vector_float3>.stride)
+            }
         }
 
     }
@@ -450,7 +463,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
         frameData.directionalLightDirection = directionalLightDirection
 
         // Update directional light color.
-        let directionalLightColor = vector_float3(0.4, 0.4, 0.4)
+        let directionalLightColor = vector_float3(0.4, 0, 0.2)
         frameData.directionalLightColor = directionalLightColor
 
         // Set projection matrix and calculate inverted projection matrix.
@@ -485,8 +498,10 @@ class FPRenderer: NSObject, MTKViewDelegate {
         
         rotation += 0.002;
         
-        frameDataBuffers[currentBufferIndex].contents().storeBytes(of: frameData, as: FPFrameData.self);
-
+        withUnsafePointer(to: frameData){
+            frameDataBuffers[currentBufferIndex].contents().copyMemory(from: $0, byteCount: MemoryLayout<FPFrameData>.stride);
+        }
+        
         self.updateLights();
     }
     
@@ -543,84 +558,82 @@ class FPRenderer: NSObject, MTKViewDelegate {
             
             /// Delay getting the currentRenderPassDescriptor until we absolutely need it to avoid
             ///   holding onto the drawable and blocking the display pipeline any longer than necessary
-            let renderPassDescriptor = view.currentRenderPassDescriptor
             
-            if let renderPassDescriptor = renderPassDescriptor, let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) {
                 // Check if there is a drawable to render content to.
-                if(view.currentDrawable != nil)
-                {
-                    if(FPNumSamples > 1)
-                    {
-                        viewRenderPassDescriptor.colorAttachments[FPRenderTargetIndices.lighting.rawValue].resolveTexture = view.currentDrawable!.texture;
-                    }
-                    else
-                    {
-                        viewRenderPassDescriptor.colorAttachments[FPRenderTargetIndices.lighting.rawValue].texture =
-                        view.currentDrawable!.texture;
-                    }
+                if let drawableTexture = view.currentDrawable?.texture {
+                    //                    if(FPNumSamples > 1)
+                    //                    {
+                    //                        viewRenderPassDescriptor.colorAttachments[FPRenderTargetIndices.lighting.rawValue].resolveTexture = view.currentDrawable!.texture;
+                    //                    }
+                    //                    else
+                    //                    {
 
-                    renderEncoder.setCullMode(.back);
-
-                    // Render scene to depth buffer only. You later use this data to determine the minimum and
-                    // maximum depth values of each tile.
-                    renderEncoder.pushDebugGroup("Depth Pre-Pass");
-                    renderEncoder.setRenderPipelineState(depthPrePassPipelineState);
-                    renderEncoder.setDepthStencilState(depthState);
-                    renderEncoder.setVertexBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
-                    self.drawMeshes(renderEncoder);
-                    renderEncoder.popDebugGroup();
+                    viewRenderPassDescriptor.colorAttachments[FPRenderTargetIndices.lighting.rawValue].texture = drawableTexture;
                     
+                    if let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: viewRenderPassDescriptor) {
+                        renderEncoder.setCullMode(.back);
 
-                    // Calculate light bins.
-                    renderEncoder.pushDebugGroup("Calculate Light Bins");
-                    renderEncoder.setRenderPipelineState(lightBinCreationPipelineState);
-                    let binBufferSize = max(Int(FPMaxLightsPerTile)*Int(MemoryLayout<Int32>.size), Int(FPTileWidth) * Int(FPTileHeight) * Int(MemoryLayout<Int32>.size))
-                    renderEncoder.setThreadgroupMemoryLength(Int(FPTileDataSize), offset:binBufferSize, index:FPThreadgroupIndices.bufferIndexTileData.rawValue);
-                    renderEncoder.dispatchThreadsPerTile(MTLSizeMake(Int(FPTileWidth), Int(FPTileHeight), 1));
-                    renderEncoder.popDebugGroup();
-                        // Perform tile culling, to minimize the number of lights rendered per tile.
-                    renderEncoder.pushDebugGroup("Prepare Light Lists");
-                    renderEncoder.setRenderPipelineState(lightCullingPipelineState);
-                    renderEncoder.setThreadgroupMemoryLength(binBufferSize, offset:0, index:FPThreadgroupIndices.bufferIndexLightList.rawValue);
-                    renderEncoder.setThreadgroupMemoryLength(binBufferSize, offset:binBufferSize, index: FPThreadgroupIndices.bufferIndexTileData.rawValue);
-                    renderEncoder.setTileBuffer(frameDataBuffers[currentBufferIndex], offset:0, index: FPBufferIndices.indexFrameData.rawValue);
-                    renderEncoder.setTileBuffer(lightEyePositions[currentBufferIndex], offset:0, index:FPBufferIndices.indexLightsPosition.rawValue);
-                    renderEncoder.dispatchThreadsPerTile(MTLSizeMake(Int(FPTileWidth),Int(FPTileHeight),1));
-                    renderEncoder.popDebugGroup();
+                        // Render scene to depth buffer only. You later use this data to determine the minimum and
+                        // maximum depth values of each tile.
+                        renderEncoder.pushDebugGroup("Depth Pre-Pass");
+                        
+                        renderEncoder.setRenderPipelineState(depthPrePassPipelineState);
+                        renderEncoder.setDepthStencilState(depthState);
+                        renderEncoder.setVertexBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
+                        self.drawMeshes(renderEncoder);
+                        renderEncoder.popDebugGroup();
+                        
 
-                    // Render objects with lighting.
-                    renderEncoder.pushDebugGroup("Render Forward Lighting");
-                    renderEncoder.setRenderPipelineState(forwardLightingPipelineState);
-                    renderEncoder.setDepthStencilState(relaxedDepthState);
-                    renderEncoder.setVertexBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
-                    renderEncoder.setFragmentBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
-                    renderEncoder.setFragmentBuffer(lightsData, offset:0, index:FPBufferIndices.indexLightsData.rawValue);
-                    renderEncoder.setFragmentBuffer(lightWorldPositions[currentBufferIndex], offset:0, index:FPBufferIndices.indexLightsPosition.rawValue);
-                    self.drawMeshes(renderEncoder);
-                    renderEncoder.popDebugGroup();
+                        // Calculate light bins.
+                        renderEncoder.pushDebugGroup("Calculate Light Bins");
+                        
+                        renderEncoder.setRenderPipelineState(lightBinCreationPipelineState);
+                        renderEncoder.setThreadgroupMemoryLength(Int(FPTileDataSize), offset:Int(FPThreadgroupBufferSize), index:FPThreadgroupIndices.bufferIndexTileData.rawValue);
+                        renderEncoder.dispatchThreadsPerTile(MTLSizeMake(Int(FPTileWidth), Int(FPTileHeight), 1));
+                        renderEncoder.popDebugGroup();
+                            // Perform tile culling, to minimize the number of lights rendered per tile.
+                        renderEncoder.pushDebugGroup("Prepare Light Lists");
+                        renderEncoder.setRenderPipelineState(lightCullingPipelineState);
+                        renderEncoder.setThreadgroupMemoryLength(FPThreadgroupBufferSize, offset:0, index:FPThreadgroupIndices.bufferIndexLightList.rawValue);
+                        renderEncoder.setThreadgroupMemoryLength(Int(FPTileDataSize), offset:FPThreadgroupBufferSize, index: FPThreadgroupIndices.bufferIndexTileData.rawValue);
+                        renderEncoder.setTileBuffer(frameDataBuffers[currentBufferIndex], offset:0, index: FPBufferIndices.indexFrameData.rawValue);
+                        renderEncoder.setTileBuffer(lightEyePositions[currentBufferIndex], offset:0, index:FPBufferIndices.indexLightsPosition.rawValue);
+                        renderEncoder.dispatchThreadsPerTile(MTLSizeMake(Int(FPTileWidth),Int(FPTileHeight),1));
+                        renderEncoder.popDebugGroup();
 
-                    // Draw fairies.
-                    renderEncoder.pushDebugGroup("Draw Fairies");
-                    renderEncoder.setRenderPipelineState(fairyPipelineState);
-                    renderEncoder.setDepthStencilState(depthState);
-                    renderEncoder.setVertexBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
-                    renderEncoder.setVertexBuffer(fairy, offset:0, index:FPBufferIndices.indexMeshPositions.rawValue);
-                    renderEncoder.setVertexBuffer(lightsData, offset:0, index:FPBufferIndices.indexLightsData.rawValue);
-                    renderEncoder.setVertexBuffer(lightWorldPositions[currentBufferIndex], offset:0, index:FPBufferIndices.indexLightsPosition.rawValue);
-                    renderEncoder.drawPrimitives(type: .triangleStrip,vertexStart:0, vertexCount:FPNumFairyVertices, instanceCount: Int(FPNumLights));
-                    renderEncoder.popDebugGroup();
+                        // Render objects with lighting.
+                        renderEncoder.pushDebugGroup("Render Forward Lighting");
+                        renderEncoder.setRenderPipelineState(forwardLightingPipelineState);
+                        renderEncoder.setDepthStencilState(relaxedDepthState);
+                        renderEncoder.setVertexBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
+                        renderEncoder.setFragmentBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
+                        renderEncoder.setFragmentBuffer(lightsData, offset:0, index:FPBufferIndices.indexLightsData.rawValue);
+                        renderEncoder.setFragmentBuffer(lightWorldPositions[currentBufferIndex], offset:0, index:FPBufferIndices.indexLightsPosition.rawValue);
+                        self.drawMeshes(renderEncoder);
+                        renderEncoder.popDebugGroup();
+
+                        // Draw fairies.
+                        renderEncoder.pushDebugGroup("Draw Fairies");
+                        renderEncoder.setRenderPipelineState(fairyPipelineState);
+                        renderEncoder.setDepthStencilState(depthState);
+                        renderEncoder.setVertexBuffer(frameDataBuffers[currentBufferIndex], offset:0, index:FPBufferIndices.indexFrameData.rawValue);
+                        renderEncoder.setVertexBuffer(fairy, offset:0, index:FPBufferIndices.indexMeshPositions.rawValue);
+                        renderEncoder.setVertexBuffer(lightsData, offset:0, index:FPBufferIndices.indexLightsData.rawValue);
+                        renderEncoder.setVertexBuffer(lightWorldPositions[currentBufferIndex], offset:0, index:FPBufferIndices.indexLightsPosition.rawValue);
+                        renderEncoder.drawPrimitives(type: .triangleStrip,vertexStart:0, vertexCount:FPNumFairyVertices, instanceCount: Int(FPNumLights));
+                        renderEncoder.popDebugGroup();
+                            
+                        renderEncoder.endEncoding()
                 }
-                
 
-                
-                renderEncoder.endEncoding()
-                
-                if let drawable = view.currentDrawable {
-                    commandBuffer.present(drawable)
-                }
+            }
+            
+            if let drawable = view.currentDrawable {
+                commandBuffer.present(drawable)
             }
             
             commandBuffer.commit()
+
         }
     }
     
@@ -631,7 +644,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
         // Update the aspect ratio and projection matrix because the view orientation
         //   or size has changed.
         let aspect = Float(size.width) / Float(size.height)
-        self.fov = 65 * (.pi / 180.0)
+        self.fov = 90.0 * (.pi / 180.0)
         self.nearPlane = 1.0
         self.farPlane = 1500.0
         self.projectionMatrix = matrix_perspective_left_hand(fovyRadians: self.fov, aspectRatio: aspect, nearZ: nearPlane, farZ: farPlane);
@@ -666,7 +679,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
 
         textureDescriptor.pixelFormat = FPDepthDataPixelFormat;
         let depthDataTexture = self.device.makeTexture(descriptor: textureDescriptor);
-        self.viewRenderPassDescriptor.colorAttachments[1].texture = depthDataTexture;
+        self.viewRenderPassDescriptor.colorAttachments[FPRenderTargetIndices.depth.rawValue].texture = depthDataTexture;
     }
 }
 
@@ -701,25 +714,16 @@ func matrix4x4_translation(_ translationX: Float, _ translationY: Float, _ trans
                                          vector_float4(translationX, translationY, translationZ, 1)))
 }
 
-func matrix_perspective_right_hand(fovyRadians fovy: Float, aspectRatio: Float, nearZ: Float, farZ: Float) -> matrix_float4x4 {
-    let ys = 1 / tanf(fovy * 0.5)
-    let xs = ys / aspectRatio
-    let zs = farZ / (nearZ - farZ)
-    return matrix_float4x4(columns:(vector_float4(xs,  0, 0,   0),
-                                         vector_float4( 0, ys, 0,   0),
-                                         vector_float4( 0,  0, zs, -nearZ * zs),
-                                         vector_float4( 0,  0, 1, 0)))
-}
 
 
 func matrix_perspective_left_hand(fovyRadians fovy: Float, aspectRatio: Float, nearZ: Float, farZ: Float) -> matrix_float4x4 {
     let ys = 1 / tanf(fovy * 0.5)
     let xs = ys / aspectRatio
-    let zs = farZ / (nearZ - farZ)
+    let zs = farZ / (farZ - nearZ)
     return matrix_float4x4(columns:(vector_float4(xs,  0, 0,   0),
                                          vector_float4( 0, ys, 0,   0),
-                                         vector_float4( 0,  0, zs, -1),
-                                         vector_float4( 0,  0, zs * nearZ, 0)))
+                                         vector_float4( 0,  0, zs, nearZ*zs),
+                                         vector_float4( 0,  0, -1, 0)))
 }
 
 

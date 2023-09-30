@@ -42,78 +42,46 @@ class FPSubmesh : NSObject {
     }
     
     class func createMetalTextureFromMaterial(material: MDLMaterial, modelIOMaterialSemantic: MDLMaterialSemantic, metalKitTextureLoader: MTKTextureLoader) throws -> MTLTexture? {
-        var texture: MTLTexture? = nil;
-
-        let propertiesWithSemantic = material.properties(with: modelIOMaterialSemantic)
-
-        for property in propertiesWithSemantic {
-            if(property.type == MDLMaterialPropertyType.string ||
-               property.type == MDLMaterialPropertyType.URL)
-            {
-                
-                // Load the textures with shader read using private storage
-
-                let textureLoaderOptions: [MTKTextureLoader.Option: Any] =  [
-                    MTKTextureLoader.Option.textureUsage: MTLTextureUsage.shaderRead,
-                    MTKTextureLoader.Option.textureStorageMode : MTLStorageMode.private,
-                    MTKTextureLoader.Option.SRGB : false
-                ]
-                
-                // First will interpret the string as a file path and attempt to load it with
-                //    -[MTKTextureLoader newTextureWithContentsOfURL:options:error:]
-                var textureURL: URL? = nil;
-                if(property.type == MDLMaterialPropertyType.URL) {
-                    textureURL = property.urlValue
-                } else {
-                    textureURL = URL(string: "file://"+property.stringValue!)
+        
+        var newTexture: MTLTexture!
+        
+        for property in material.properties(with: modelIOMaterialSemantic) {
+            // Load the textures with shader read using private storage
+            let textureLoaderOptions: [MTKTextureLoader.Option: Any] = [
+            .textureUsage: MTLTextureUsage.shaderRead.rawValue,
+            .textureStorageMode: MTLStorageMode.private.rawValue]
+            
+            switch property.type {
+            case .string:
+                if let stringValue = property.stringValue {
+                    
+                    // If not texture has been fround by interpreting the URL as a path,  interpret
+                    // string as an asset catalog name and attempt to load it with
+                    //  -[MTKTextureLoader newTextureWithName:scaleFactor:bundle:options::error:]
+                    // If a texture with the by interpreting the URL as an asset catalog name
+                    if let texture = try? metalKitTextureLoader.newTexture(name: stringValue, scaleFactor: 1.0, bundle: nil, options: textureLoaderOptions) {
+                        newTexture = texture
+                    }
                 }
-
-                // Attempt to load the texture from the file system
-                do {
-                    texture = try metalKitTextureLoader.newTexture(URL: textureURL!, options:textureLoaderOptions)
-                } catch {
-                    texture = nil
+            case .URL:
+                if let textureURL = property.urlValue {
+                    // Attempt to load the texture from the file system
+                    // If the texture has been found for a material using the string as a file path name...
+                    if let texture = try? metalKitTextureLoader.newTexture(URL: textureURL, options: textureLoaderOptions) {
+                        newTexture = texture
+                    }
                 }
-                
-                // If MetalKit found a texture using the string as a file path name...
-                if(texture != nil) {
-                    // ...return it
-                    return texture;
-                }
-
-                // If MetalKit  did not find a texture by interpreting the string as a path, interpret
-                //   the last component of the string as an asset catalog name and attempt to load it
-                //   with -[MTKTextureLoader newTextureWithName:scaleFactor:bundle:options::error:]
-
-                let lastComponent = textureURL?.lastPathComponent
-
-                do {
-                    texture = try metalKitTextureLoader.newTexture(name: lastComponent!, scaleFactor: 1.0, bundle: nil, options: textureLoaderOptions)
-                } catch {
-                    texture = nil
-                }
-                
-                // If there exists a texture with the string in the asset catalog...
-                if(texture != nil) {
-                    // ...return it
-                    return texture;
-                }
-                
-
-                // If the texture loader did not find a texture when using the string as a name,
-                //  something went wrong (Perhaps the file was missing or
-                //  misnamed in the asset catalog, model/material file, or file system)
-
-                // Depending on how the Metal render pipeline use with this submesh is implemented,
-                //   this condition can be handled more gracefully.  The app could load a dummy texture
-                //   that will look okay when set with the pipelin or ensure that  that the pipeline
-                //   rendeirng this submesh does not require a material with this property.
-               
-
-                throw TextureLoadingException();
+            default:
+                // If we did not find the texture by interpreting it as a file path or as an asset name in the asset catalog, something went wrong
+                // (Perhaps the file was missing or misnamed in the asset catalog, model/material file, or file system)
+                // Depending on how the Metal render pipeline use with this submesh is implemented, this condition can be handled more gracefully.
+                // The app could load a dummy texture that will look okay when set with the pipeline or ensure that the pipelines rendering
+                // this submesh does not require a material with this property.
+                 
+                fatalError("Texture data for material property not found.")
             }
         }
-        return nil;
+        return newTexture
     }
     
     let metalKitSubmesh: MTKSubmesh

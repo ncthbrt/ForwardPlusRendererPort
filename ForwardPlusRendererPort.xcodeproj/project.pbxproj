@@ -9,12 +9,6 @@
 /* Begin PBXBuildFile section */
 		BC0A23ED2ABD7ECA00CA6587 /* FPMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0A23EC2ABD7ECA00CA6587 /* FPMesh.swift */; };
 		BCACD8E92AC58BE00079BF71 /* Meshes in Resources */ = {isa = PBXBuildFile; fileRef = BCACD8E82AC58BE00079BF71 /* Meshes */; };
-		BCACD8F12AC5C8EE0079BF71 /* MetalPerformanceShadersGraph.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8EC2AC5C8EE0079BF71 /* MetalPerformanceShadersGraph.framework */; };
-		BCACD8F22AC5C8EE0079BF71 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8ED2AC5C8EE0079BF71 /* MetalKit.framework */; };
-		BCACD8F32AC5C8EE0079BF71 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8EE2AC5C8EE0079BF71 /* Metal.framework */; };
-		BCACD8F42AC5C8EE0079BF71 /* MetalFX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8EF2AC5C8EE0079BF71 /* MetalFX.framework */; };
-		BCACD8F52AC5C8EE0079BF71 /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8F02AC5C8EE0079BF71 /* MetalPerformanceShaders.framework */; };
-		BCACD8F72AC5C8FC0079BF71 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCACD8F62AC5C8FC0079BF71 /* ModelIO.framework */; };
 		BCB980402ABB3DA800CC5B08 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB9803F2ABB3DA800CC5B08 /* AppDelegate.swift */; };
 		BCB980432ABB3DA800CC5B08 /* FPRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB980422ABB3DA800CC5B08 /* FPRenderer.swift */; };
 		BCB980452ABB3DA800CC5B08 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB980442ABB3DA800CC5B08 /* GameViewController.swift */; };
@@ -62,12 +56,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCACD8F72AC5C8FC0079BF71 /* ModelIO.framework in Frameworks */,
-				BCACD8F52AC5C8EE0079BF71 /* MetalPerformanceShaders.framework in Frameworks */,
-				BCACD8F12AC5C8EE0079BF71 /* MetalPerformanceShadersGraph.framework in Frameworks */,
-				BCACD8F32AC5C8EE0079BF71 /* Metal.framework in Frameworks */,
-				BCACD8F42AC5C8EE0079BF71 /* MetalFX.framework in Frameworks */,
-				BCACD8F22AC5C8EE0079BF71 /* MetalKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
