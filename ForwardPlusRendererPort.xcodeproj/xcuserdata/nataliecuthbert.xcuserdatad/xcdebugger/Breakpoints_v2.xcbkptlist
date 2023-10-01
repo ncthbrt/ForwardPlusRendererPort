@@ -3,4 +3,213 @@
    uuid = "36553F3B-CA90-49BC-ADD9-CA56BD5B8A0C"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8FF76634-44EA-466C-996B-3EB38DFE2EAA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ForwardPlusRendererPort/FPForward.metal"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "forward_lighting_fragment(ColorInOut in [[ stage_in ]], constant FPFrameData &amp; frameData [[ buffer(FPBufferIndexFrameData) ]], threadgroup int *visible_lights [[ threadgroup(FPThreadgroupBufferIndexLightList)]], threadgroup TileData *tile_data [[ threadgroup(FPThreadgroupBufferIndexTileData) ]], device FPPointLight *light_data [[ buffer(FPBufferIndexLightsData) ]], device vector_float4 *light_positions [[ buffer(FPBufferIndexLightsPosition) ]], texture2d&lt;half&gt; baseColorMap [[ texture(FPTextureIndexBaseColor) ]], texture2d&lt;half&gt; normalMap [[ texture(FPTextureIndexNormal) ]], texture2d&lt;half&gt; specularMap [[ texture(FPTextureIndexSpecular) ]])"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6D077479-DC1E-408C-A683-CE7A632368BE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ForwardPlusRendererPort/FPRenderer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "422"
+            endingLineNumber = "422"
+            landmarkName = "updateLights()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7AB5760D-DE04-4EA2-9280-0E714A05EF07"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ForwardPlusRendererPort/FPRenderer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "425"
+            endingLineNumber = "425"
+            landmarkName = "updateLights()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "7AB5760D-DE04-4EA2-9280-0E714A05EF07 - 7b03bc9a90c51e39"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ForwardPlusRendererPort.FPRenderer.updateLights() -&gt; ()"
+                  moduleName = "ForwardPlusRendererPort"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nataliecuthbert/Documents/XCodeProjects/ForwardPlusRendererPort/ForwardPlusRendererPort/FPRenderer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "430"
+                  endingLineNumber = "430"
+                  offsetFromSymbolStart = "4032">
+               </Location>
+               <Location
+                  uuid = "7AB5760D-DE04-4EA2-9280-0E714A05EF07 - f170178156be7dd3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.UnsafePointer&lt;Swift.SIMD4&lt;Swift.Float&gt;&gt;) -&gt; () in ForwardPlusRendererPort.FPRenderer.updateLights() -&gt; ()"
+                  moduleName = "ForwardPlusRendererPort"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nataliecuthbert/Documents/XCodeProjects/ForwardPlusRendererPort/ForwardPlusRendererPort/FPRenderer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "431"
+                  endingLineNumber = "431"
+                  offsetFromSymbolStart = "60">
+               </Location>
+               <Location
+                  uuid = "7AB5760D-DE04-4EA2-9280-0E714A05EF07 - 7b03bc9a90c51f22"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ForwardPlusRendererPort.FPRenderer.updateLights() -&gt; ()"
+                  moduleName = "ForwardPlusRendererPort"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nataliecuthbert/Documents/XCodeProjects/ForwardPlusRendererPort/ForwardPlusRendererPort/FPRenderer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "423"
+                  endingLineNumber = "423"
+                  offsetFromSymbolStart = "3076">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7664FA19-1EB1-4E71-A908-634485161EDE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ForwardPlusRendererPort/FPRenderer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "431"
+            endingLineNumber = "431"
+            landmarkName = "updateLights()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "69B97D90-B254-4ED1-9464-83C2BB272C8F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ForwardPlusRendererPort/FPRenderer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "406"
+            endingLineNumber = "406"
+            landmarkName = "updateLights()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2F60BD27-E9B6-4087-881E-B63EC8F5B9DF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ForwardPlusRendererPort/FPRenderer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "407"
+            endingLineNumber = "407"
+            landmarkName = "updateLights()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "644C7962-6AD6-4357-A60E-CB17B5003885"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ForwardPlusRendererPort/FPRenderer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "init?(metalKitView:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "35A38687-DEA9-406A-9B5C-5E016DC9DC82"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ForwardPlusRendererPort/FPRenderer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "430"
+            endingLineNumber = "430"
+            landmarkName = "updateLights()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "35A38687-DEA9-406A-9B5C-5E016DC9DC82 - 7b03bc9a90c51eff"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ForwardPlusRendererPort.FPRenderer.updateLights() -&gt; ()"
+                  moduleName = "ForwardPlusRendererPort"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nataliecuthbert/Documents/XCodeProjects/ForwardPlusRendererPort/ForwardPlusRendererPort/FPRenderer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "428"
+                  endingLineNumber = "428"
+                  offsetFromSymbolStart = "4032">
+               </Location>
+               <Location
+                  uuid = "35A38687-DEA9-406A-9B5C-5E016DC9DC82 - f170178156be7d91"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.UnsafePointer&lt;Swift.SIMD4&lt;Swift.Float&gt;&gt;) -&gt; () in ForwardPlusRendererPort.FPRenderer.updateLights() -&gt; ()"
+                  moduleName = "ForwardPlusRendererPort"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nataliecuthbert/Documents/XCodeProjects/ForwardPlusRendererPort/ForwardPlusRendererPort/FPRenderer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "429"
+                  endingLineNumber = "429"
+                  offsetFromSymbolStart = "60">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

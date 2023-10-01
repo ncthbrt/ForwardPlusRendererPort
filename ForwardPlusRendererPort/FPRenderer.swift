@@ -43,7 +43,7 @@ let FPDepthDataPixelFormat = MTLPixelFormat.r32Float;
 
 let FPDepthBufferPixelFormat = MTLPixelFormat.depth32Float;
 
-let FPThreadgroupBufferSize = max(Int(FPMaxLightsPerTile)*MemoryLayout<__uint32_t>.size, Int(FPTileWidth)*Int(FPTileHeight)*MemoryLayout<__uint32_t>.size);
+let FPThreadgroupBufferSize = max(Int(FPMaxLightsPerTile)*MemoryLayout<UInt32>.stride, Int(FPTileWidth)*Int(FPTileHeight)*MemoryLayout<UInt32>.stride);
 
 
 class FPRenderer: NSObject, MTKViewDelegate {
@@ -63,7 +63,6 @@ class FPRenderer: NSObject, MTKViewDelegate {
     
     let depthState: MTLDepthStencilState
     let relaxedDepthState: MTLDepthStencilState
-    let dontWriteDepthState: MTLDepthStencilState
 
     var frameDataBuffers: [MTLBuffer] = Array()
     
@@ -73,7 +72,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
     var lightEyePositions: [MTLBuffer] = Array()
     
     var nearPlane: Float = 1.0
-    var farPlane: Float = 100.0
+    var farPlane: Float = 1500
     var fov: Float = 65.0 * (.pi / 180.0)
     
     var currentBufferIndex: Int = 0;
@@ -106,13 +105,13 @@ class FPRenderer: NSObject, MTKViewDelegate {
             self.frameDataBuffers.append(device.makeBuffer(length: MemoryLayout<FPFrameData>.size, options: storageMode)!)
             self.frameDataBuffers[i].label = "FrameDataBuffer"+idxStr
             
-            self.lightWorldPositions.append(device.makeBuffer(length: MemoryLayout<vector_float4>.size*Int(FPNumLights), options:storageMode)!)
+            self.lightWorldPositions.append(device.makeBuffer(length: MemoryLayout<vector_float4>.stride*Int(FPNumLights), options:storageMode)!)
 
             self.lightWorldPositions[i].label = "LightPositions"+idxStr
 
-            self.lightEyePositions.append(device.makeBuffer(length: MemoryLayout<vector_float4>.size*Int(FPNumLights), options:storageMode)!)
+            self.lightEyePositions.append(device.makeBuffer(length: MemoryLayout<vector_float4>.stride*Int(FPNumLights), options:storageMode)!)
 
-            self.lightEyePositions[i].label = "LightPositions"+idxStr
+            self.lightEyePositions[i].label = "LightEyePositions"+idxStr
         }
         
         // Create a vertex descriptor for the Metal pipeline. Specify the layout of vertices the
@@ -229,7 +228,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
         tileRenderPipelineDescriptor.colorAttachments[FPRenderTargetIndices.depth.rawValue].pixelFormat = FPDepthDataPixelFormat
 
         tileRenderPipelineDescriptor.threadgroupSizeMatchesTileSize = true;
-        try! self.lightCullingPipelineState = device.makeRenderPipelineState(tileDescriptor: tileRenderPipelineDescriptor, options:MTLPipelineOption(), reflection:nil)
+        self.lightCullingPipelineState = try! device.makeRenderPipelineState(tileDescriptor: tileRenderPipelineDescriptor, options:MTLPipelineOption(), reflection:nil)
     
 
         let depthStateDesc = MTLDepthStencilDescriptor()
@@ -251,12 +250,6 @@ class FPRenderer: NSObject, MTKViewDelegate {
         depthStateDesc.depthCompareFunction = .lessEqual
         depthStateDesc.isDepthWriteEnabled = false
         self.relaxedDepthState = device.makeDepthStencilState(descriptor: depthStateDesc)!
-    
-
-        // Create a depth state with depth buffer write disabled.
-        depthStateDesc.depthCompareFunction = .less
-        depthStateDesc.isDepthWriteEnabled = false
-        self.dontWriteDepthState = device.makeDepthStencilState(descriptor: depthStateDesc)!
     
 
         // Create a render pass descriptor to render to the drawable
@@ -383,7 +376,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
             lightData.lightRadius = Float.random(in:25...35)
             lightData.lightSpeed = Float.random(in:0.003...0.015)
             
-            let lightPosition = vector_float4(distance*sinf(angle),height,distance*cosf(angle),lightData.lightRadius)
+            let lightPosition = vector_float4(distance*sinf(angle),height,distance*cosf(angle), lightData.lightRadius)
             
             withUnsafePointer(to: lightData) {
                 lightDataContents.advanced(by: MemoryLayout<FPPointLight>.stride*Int(lightId)).copyMemory(from: $0, byteCount: MemoryLayout<FPPointLight>.stride)
@@ -395,8 +388,8 @@ class FPRenderer: NSObject, MTKViewDelegate {
             
         }
 
-        memcpy(lightWorldPositions[1].contents(), lightWorldPositions[0].contents(), Int(FPNumLights) * MemoryLayout<vector_float3>.stride)
-        memcpy(lightWorldPositions[2].contents(), lightWorldPositions[0].contents(), Int(FPNumLights) * MemoryLayout<vector_float3>.stride)
+        memcpy(lightWorldPositions[1].contents(), lightWorldPositions[0].contents(), Int(FPNumLights) * MemoryLayout<vector_float4>.stride)
+        memcpy(lightWorldPositions[2].contents(), lightWorldPositions[0].contents(), Int(FPNumLights) * MemoryLayout<vector_float4>.stride)
 
         super.init()
     }
@@ -412,35 +405,29 @@ class FPRenderer: NSObject, MTKViewDelegate {
 
         let previousWorldSpacePositionsContents = lightWorldPositions[previousFramesBufferIndex].contents()
         let currentWorldSpaceLightPositionsContents = lightWorldPositions[currentBufferIndex].contents()
-        let currentEyeSpaceLightPositionContents = lightEyePositions[currentBufferIndex].contents()
-        
+
+        let currentEyeSpaceLightPositionsContents = lightEyePositions[currentBufferIndex].contents()
+
         for i in 0..<FPNumLights
         {
             let lightData = lightDataContents.advanced(by: Int(i)*MemoryLayout<FPPointLight>.stride).load(as: FPPointLight.self)
             
             let rotation = matrix4x4_rotation(radians: lightData.lightSpeed, axis: vector_float3(0, 1.0, 0.0));
 
-            let previousWorldSpacePositionVector3 = previousWorldSpacePositionsContents.advanced(by: Int(i)*MemoryLayout<vector_float3>.stride).load(as: vector_float3.self);
-            
-            let previousWorldSpacePosition = vector_float4(
-               previousWorldSpacePositionVector3.x,
-               previousWorldSpacePositionVector3.y,
-               previousWorldSpacePositionVector3.z,
-               1
-           );
-
-            var currentWorldSpacePosition = matrix_multiply(rotation, previousWorldSpacePosition);
-            var currentEyeSpacePosition = matrix_multiply(viewMatrix, currentWorldSpacePosition);
+            var previousWorldSpacePosition = previousWorldSpacePositionsContents.advanced(by: Int(i)*MemoryLayout<vector_float4>.stride).load(as: vector_float4.self);
+            previousWorldSpacePosition.w = 1;
+            var currentWorldSpacePosition: vector_float4 = matrix_multiply(rotation, previousWorldSpacePosition);
+            var currentEyeSpacePosition: vector_float4 = matrix_multiply(viewMatrix, currentWorldSpacePosition);
 
             currentWorldSpacePosition.w = lightData.lightRadius;
             currentEyeSpacePosition.w = lightData.lightRadius;
 
-            withUnsafePointer(to: vector_float3(currentWorldSpacePosition.x,currentWorldSpacePosition.y, currentWorldSpacePosition.z)) {
-                currentWorldSpaceLightPositionsContents.advanced(by: Int(i)*MemoryLayout<vector_float3>.stride).copyMemory(from: $0, byteCount: MemoryLayout<vector_float3>.stride)
+            withUnsafePointer(to: currentWorldSpacePosition) {
+                currentWorldSpaceLightPositionsContents.advanced(by: Int(i)*MemoryLayout<vector_float4>.stride).copyMemory(from: $0, byteCount: MemoryLayout<vector_float4>.stride)
             }
             
-            withUnsafePointer(to: vector_float3(currentEyeSpacePosition.x,currentEyeSpacePosition.y, currentEyeSpacePosition.z)) {
-                currentEyeSpaceLightPositionContents.advanced(by: Int(i)*MemoryLayout<vector_float3>.stride).copyMemory(from: $0, byteCount: MemoryLayout<vector_float3>.stride)
+            withUnsafePointer(to: currentEyeSpacePosition) {
+                currentEyeSpaceLightPositionsContents.advanced(by: Int(i)*MemoryLayout<vector_float4>.stride).copyMemory(from: $0, byteCount: MemoryLayout<vector_float4>.stride)
             }
         }
 
@@ -586,7 +573,6 @@ class FPRenderer: NSObject, MTKViewDelegate {
 
                         // Calculate light bins.
                         renderEncoder.pushDebugGroup("Calculate Light Bins");
-                        
                         renderEncoder.setRenderPipelineState(lightBinCreationPipelineState);
                         renderEncoder.setThreadgroupMemoryLength(Int(FPTileDataSize), offset:Int(FPThreadgroupBufferSize), index:FPThreadgroupIndices.bufferIndexTileData.rawValue);
                         renderEncoder.dispatchThreadsPerTile(MTLSizeMake(Int(FPTileWidth), Int(FPTileHeight), 1));
@@ -644,7 +630,7 @@ class FPRenderer: NSObject, MTKViewDelegate {
         // Update the aspect ratio and projection matrix because the view orientation
         //   or size has changed.
         let aspect = Float(size.width) / Float(size.height)
-        self.fov = 90.0 * (.pi / 180.0)
+        self.fov = 65.0 * (.pi / 180.0)
         self.nearPlane = 1.0
         self.farPlane = 1500.0
         self.projectionMatrix = matrix_perspective_left_hand(fovyRadians: self.fov, aspectRatio: aspect, nearZ: nearPlane, farZ: farPlane);
@@ -722,8 +708,8 @@ func matrix_perspective_left_hand(fovyRadians fovy: Float, aspectRatio: Float, n
     let zs = farZ / (farZ - nearZ)
     return matrix_float4x4(columns:(vector_float4(xs,  0, 0,   0),
                                          vector_float4( 0, ys, 0,   0),
-                                         vector_float4( 0,  0, zs, nearZ*zs),
-                                         vector_float4( 0,  0, -1, 0)))
+                                         vector_float4( 0,  0, zs, 1),
+                                         vector_float4( 0,  0, -nearZ*zs, 0)))
 }
 
 

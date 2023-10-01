@@ -46,8 +46,6 @@ static float distance_point_plane(thread const FPPlane& plane, float3 point)
 /// minimum and maximum depth, there's nothing to light outside that range. Any light volume entirely outside the minimum and
 /// maximum depth range can be culled.
 kernel void create_bins(imageblock<ColorData,imageblock_layout_implicit> imageBlock,
-                        constant FPFrameData & frameData    [[ buffer(FPBufferIndexFrameData) ]],
-                        device vector_float4* light_positions [[ buffer(FPBufferIndexLightsPosition) ]],
                         threadgroup TileData *tile_data       [[ threadgroup(FPThreadgroupBufferIndexTileData) ]],
                         ushort2 thread_local_position         [[ thread_position_in_threadgroup ]],
                         uint thread_linear_id                 [[ thread_index_in_threadgroup ]],

@@ -39,9 +39,6 @@
 		BCB980492ABB3DA800CC5B08 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BCB9804B2ABB3DAA00CC5B08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BCB9804E2ABB3DAA00CC5B08 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		BCB980582ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardPlusRendererPortTests.swift; sourceTree = "<group>"; };
-		BCB980622ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardPlusRendererPortUITests.swift; sourceTree = "<group>"; };
-		BCB980642ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardPlusRendererPortUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		BCB980712ABC24A500CC5B08 /* FPDepthPass.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = FPDepthPass.metal; sourceTree = "<group>"; };
 		BCB980752ABC253C00CC5B08 /* FPShaderCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FPShaderCommon.h; sourceTree = "<group>"; };
 		BCB980762ABC259400CC5B08 /* FPShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FPShaderTypes.h; sourceTree = "<group>"; };
@@ -79,8 +76,6 @@
 			isa = PBXGroup;
 			children = (
 				BCB9803E2ABB3DA800CC5B08 /* ForwardPlusRendererPort */,
-				BCB980572ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests */,
-				BCB980612ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests */,
 				BCB9803D2ABB3DA800CC5B08 /* Products */,
 				BCACD8EB2AC5C8EE0079BF71 /* Frameworks */,
 			);
@@ -115,23 +110,6 @@
 				BC0A23EC2ABD7ECA00CA6587 /* FPMesh.swift */,
 			);
 			path = ForwardPlusRendererPort;
-			sourceTree = "<group>";
-		};
-		BCB980572ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests */ = {
-			isa = PBXGroup;
-			children = (
-				BCB980582ABB3DAA00CC5B08 /* ForwardPlusRendererPortTests.swift */,
-			);
-			path = ForwardPlusRendererPortTests;
-			sourceTree = "<group>";
-		};
-		BCB980612ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests */ = {
-			isa = PBXGroup;
-			children = (
-				BCB980622ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITests.swift */,
-				BCB980642ABB3DAA00CC5B08 /* ForwardPlusRendererPortUITestsLaunchTests.swift */,
-			);
-			path = ForwardPlusRendererPortUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

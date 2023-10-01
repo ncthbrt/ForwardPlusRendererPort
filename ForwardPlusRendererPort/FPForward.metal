@@ -117,5 +117,6 @@ forward_lighting_fragment(ColorInOut               in              [[ stage_in ]
         out.xyz += powr(max(dot(float3(world_space_normal.xyz),H),0.0),32.0)*float3(color_sample.xyz)*spec_contrib*attenuation;
     }
 
-    return half4(half3(out.xyz),1.0f);
+    return half4(half3(out.xyz), 1.0f);
+
 }

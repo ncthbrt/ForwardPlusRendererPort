@@ -29,7 +29,6 @@ vertex VertexOutput depth_pre_pass_vertex(Vertex in                         [[ s
     
     // Calculate the position in clip space.
     out.position = frameData.projectionMatrix * frameData.modelViewMatrix * position;
-    
     return out;
 }
 
@@ -38,8 +37,10 @@ fragment ColorData depth_pre_pass_fragment(VertexOutput in [[ stage_in ]])
     // Populate on-tile geometry buffer data.
     ColorData f;
     
+    f.lighting = half4(in.position.z/20, 0, 0, 1);
     // Set the depth in clip space, which you use in `FPCulling` to perform per-tile light culling.
     f.depth = in.position.z;
+    
     
     return f;
 }
